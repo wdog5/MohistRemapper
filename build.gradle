@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'com.mohistmc'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+compileJava.options.encoding = 'UTF-8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+dependencies {
+    implementation 'org.ow2.asm:asm:9.1'
+    implementation 'org.ow2.asm:asm-commons:9.1'
+    implementation 'org.ow2.asm:asm-tree:9.1'
+    implementation 'org.ow2.asm:asm-util:9.1'
+    implementation 'org.ow2.asm:asm-analysis:9.1'
+    implementation 'com.google.guava:guava:21.0'
+    implementation 'net.md-5:SpecialSource:1.8.5'
+}
