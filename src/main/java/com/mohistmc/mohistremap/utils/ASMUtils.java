@@ -1,3 +1,21 @@
+/*
+ * Mohist - MohistMC
+ * Copyright (C) 2018-2023.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.mohistmc.mohistremap.utils;
 
 import java.io.File;
@@ -33,6 +51,7 @@ public class ASMUtils {
     private static final Map<Integer, String> typeMap = new HashMap<>();
     private static final Map<Integer, BiConsumer<String, AbstractInsnNode>> printerMap = new HashMap<>();
     public static final String classLoaderdesc = "java/lang/ClassLoader";
+    public static final String urlclassLoaderdesc = "java/net/URLClassLoader";
 
     static {
         for (Field field : Opcodes.class.getDeclaredFields()) {
@@ -99,28 +118,18 @@ public class ASMUtils {
         if (className.startsWith("[")) {
             return className.replace('.', '/');
         }
-        switch (className) {
-            case "byte":
-                return "B";
-            case "short":
-                return "S";
-            case "int":
-                return "I";
-            case "long":
-                return "J";
-            case "float":
-                return "F";
-            case "double":
-                return "D";
-            case "boolean":
-                return "Z";
-            case "char":
-                return "C";
-            case "void":
-                return "V";
-            default:
-                return "L" + className.replace('.', '/') + ";";
-        }
+        return switch (className) {
+            case "byte" -> "B";
+            case "short" -> "S";
+            case "int" -> "I";
+            case "long" -> "J";
+            case "float" -> "F";
+            case "double" -> "D";
+            case "boolean" -> "Z";
+            case "char" -> "C";
+            case "void" -> "V";
+            default -> "L" + className.replace('.', '/') + ";";
+        };
     }
 
     public static String toDescriptorV2(String internalName) {

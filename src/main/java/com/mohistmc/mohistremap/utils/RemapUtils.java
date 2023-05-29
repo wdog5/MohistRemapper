@@ -1,3 +1,21 @@
+/*
+ * Mohist - MohistMC
+ * Copyright (C) 2018-2023.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.mohistmc.mohistremap.utils;
 
 import com.mohistmc.mohistremap.model.ClassMapping;
@@ -37,7 +55,7 @@ public class RemapUtils {
     private static final List<Remapper> remappers = new ArrayList<>();
     public static Map<String, String> relocations = new HashMap<>();
 
-    public static void init(String version, InputStream is) {
+    public static void init(InputStream is) {
         jarMapping = new MohistJarMapping();
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/it/unimi/dsi/fastutil/", "it/unimi/dsi/fastutil/");
         jarMapping.packages.put("org/bukkit/craftbukkit/libs/jline/", "jline/");
@@ -46,7 +64,6 @@ public class RemapUtils {
         jarMapping.setInheritanceMap(new MohistInheritanceMap());
         jarMapping.setFallbackInheritanceProvider(new MohistInheritanceProvider());
 
-        relocations.put("net.minecraft.server", "net.minecraft.server." + version);
         try {
             jarMapping.loadMappings(
                     new BufferedReader(new InputStreamReader(is)),
@@ -165,7 +182,7 @@ public class RemapUtils {
         return mapping == null ? clazz.getSimpleName() : mapping.getNmsSimpleName();
     }
 
-    public static boolean isNMSClass(String className) {
-        return className.startsWith("net.minecraft.server.") || className.startsWith("com.mohistmc.");
+    public static boolean needRemap(String className){
+        return className.startsWith("net.minecraft.");
     }
 }

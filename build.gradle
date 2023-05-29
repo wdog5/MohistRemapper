@@ -7,17 +7,24 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://maven.mohistmc.com/' }
 }
 
 compileJava.options.encoding = 'UTF-8'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << '-Xlint:-removal'
+}
+
+
 dependencies {
-    implementation 'org.ow2.asm:asm:9.1'
-    implementation 'org.ow2.asm:asm-commons:9.1'
-    implementation 'org.ow2.asm:asm-tree:9.1'
-    implementation 'org.ow2.asm:asm-util:9.1'
-    implementation 'org.ow2.asm:asm-analysis:9.1'
-    implementation 'com.google.guava:guava:21.0'
-    implementation 'net.md-5:SpecialSource:1.8.5'
+    implementation 'org.ow2.asm:asm:9.5'
+    implementation 'org.ow2.asm:asm-commons:9.5'
+    implementation 'org.ow2.asm:asm-tree:9.5'
+    implementation 'org.ow2.asm:asm-util:9.5'
+    implementation 'org.ow2.asm:asm-analysis:9.5'
+    implementation 'com.google.guava:guava:30.0-jre'
+    implementation 'com.mohistmc:dynamicenum:0.1'
+    implementation 'net.md-5:SpecialSource:1.11.0'
 }

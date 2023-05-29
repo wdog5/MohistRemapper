@@ -1,3 +1,21 @@
+/*
+ * Mohist - MohistMC
+ * Copyright (C) 2018-2023.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.mohistmc.mohistremap.remappers;
 
 import com.google.common.collect.BiMap;
@@ -409,7 +427,7 @@ public class MohistJarMapping implements ClassRemapperSupplier {
         String kind = tokens[0];
 
         switch (kind) {
-            case "CL:": {
+            case "CL:" -> {
                 String oldClassName = inputTransformer.transformClassName(tokens[1]);
                 String newClassName = outputTransformer.transformClassName(tokens[2]);
 
@@ -429,9 +447,8 @@ public class MohistJarMapping implements ClassRemapperSupplier {
                     registerClassMapping(oldClassName, newClassName);
                     currentClass = tokens[1];
                 }
-                break;
             }
-            case "PK:":
+            case "PK:" -> {
                 String oldPackageName = inputTransformer.transformClassName(tokens[1]);
                 String newPackageName = outputTransformer.transformClassName(tokens[2]);
 
@@ -439,19 +456,16 @@ public class MohistJarMapping implements ClassRemapperSupplier {
                 if (!newPackageName.equals(".") && !newPackageName.endsWith("/")) {
                     newPackageName += "/";
                 }
-
                 if (!oldPackageName.equals(".") && !oldPackageName.endsWith("/")) {
                     oldPackageName += "/";
                 }
-
                 if (packages.containsKey(oldPackageName) && !newPackageName.equals(packages.get(oldPackageName))) {
                     throw new IllegalArgumentException("Duplicate package mapping: " + oldPackageName + " ->" + newPackageName
                             + " but already mapped to " + packages.get(oldPackageName) + " in line=" + line);
                 }
-
                 packages.put(oldPackageName, newPackageName);
-                break;
-            case "FD:": {
+            }
+            case "FD:" -> {
                 String oldFull = tokens[1];
                 String newFull = tokens[2];
 
@@ -470,9 +484,8 @@ public class MohistJarMapping implements ClassRemapperSupplier {
                 String newFieldName = outputTransformer.transformFieldName(oldFull.substring(0, splitOld), newFull.substring(splitNew + 1));
 
                 registerFieldMapping(oldClassName, oldFieldName, newClassName, newFieldName);
-                break;
             }
-            case "MD:": {
+            case "MD:" -> {
                 String oldFull = tokens[1];
                 String newFull = tokens[3];
 
@@ -495,10 +508,9 @@ public class MohistJarMapping implements ClassRemapperSupplier {
                 // TODO: support isClassIgnored() on reversed method descriptors
 
                 registerMethodMapping(oldClassName, oldMethodName, oldMethodDescriptor, newClassName, newMethodName, newMethodDescriptor);
-                break;
             }
-            default:
-                throw new IllegalArgumentException("Unable to parse srg file, unrecognized mapping type in line=" + line);
+            default ->
+                    throw new IllegalArgumentException("Unable to parse srg file, unrecognized mapping type in line=" + line);
         }
     }
 

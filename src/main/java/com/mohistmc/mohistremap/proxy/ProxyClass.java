@@ -1,3 +1,21 @@
+/*
+ * Mohist - MohistMC
+ * Copyright (C) 2018-2023.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package com.mohistmc.mohistremap.proxy;
 
 
@@ -19,40 +37,32 @@ public class ProxyClass {
     }
 
     public static Class<?> forName(String className, boolean initialize, ClassLoader loader) throws ClassNotFoundException {
-        try {
-            return Class.forName(ASMUtils.toClassName(RemapUtils.map(className.replace('.', '/'))), initialize, loader);
-        } catch (NullPointerException e) {
-            try {
-                return Class.forName(className, initialize, loader);
-            } catch (NullPointerException ex) {
-                throw new ClassNotFoundException(className);
-            }
-        }
+        return Class.forName(ASMUtils.toClassName(RemapUtils.map(className.replace('.', '/'))), initialize, loader);
     }
 
     public static Method getDeclaredMethod(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-        if (clazz.getName().startsWith("net.minecraft.")) {
+        if (RemapUtils.needRemap(clazz.getName())) {
             name = RemapUtils.mapMethodName(clazz, name, parameterTypes);
         }
         return clazz.getDeclaredMethod(name, parameterTypes);
     }
 
     public static Method getMethod(Class<?> clazz, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-        if (clazz.getName().startsWith("net.minecraft.")) {
+        if (RemapUtils.needRemap(clazz.getName())) {
             name = RemapUtils.mapMethodName(clazz, name, parameterTypes);
         }
         return clazz.getMethod(name, parameterTypes);
     }
 
     public static Field getDeclaredField(Class<?> clazz, String name) throws NoSuchFieldException, SecurityException {
-        if (clazz.getName().startsWith("net.minecraft.")) {
+        if (RemapUtils.needRemap(clazz.getName())) {
             name = RemapUtils.mapFieldName(clazz, name);
         }
         return clazz.getDeclaredField(name);
     }
 
     public static Field getField(Class<?> clazz, String name) throws NoSuchFieldException, SecurityException {
-        if (clazz.getName().startsWith("net.minecraft.")) {
+        if (RemapUtils.needRemap(clazz.getName())) {
             name = RemapUtils.mapFieldName(clazz, name);
         }
         return clazz.getField(name);
